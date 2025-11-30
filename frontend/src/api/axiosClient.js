@@ -12,7 +12,8 @@ api.interceptors.request.use(
       return config;
     }
 
-    const stored = localStorage.getItem("auth"); 
+    // Read auth token from sessionStorage to match per-tab sessions
+    const stored = sessionStorage.getItem("auth");
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
@@ -20,7 +21,7 @@ api.interceptors.request.use(
           config.headers.Authorization = `Bearer ${parsed.token}`;
         }
       } catch (e) {
-        console.error("Failed to parse auth from localStorage", e);
+        console.error("Failed to parse auth from sessionStorage", e);
       }
     }
     return config;

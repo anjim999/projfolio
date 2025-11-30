@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../api/axiosClient";
-
+import Navbar from "../components/Navbar";
 export default function SubmitProjectPage() {
   const { suggestionId } = useParams();
   const [githubLink, setGithubLink] = useState("");
@@ -34,7 +34,9 @@ export default function SubmitProjectPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <>
+    <Navbar/>
+    <div className="min-h-screen bg-gray-50 p-6 mt-15">
       <div className="max-w-xl mx-auto bg-white rounded-xl shadow border p-6 space-y-4">
         <h1 className="text-xl font-bold text-gray-800">
           Submit Project Links
@@ -95,5 +97,6 @@ export default function SubmitProjectPage() {
         </form>
       </div>
     </div>
+    </>
   );
 }

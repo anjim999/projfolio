@@ -83,6 +83,15 @@ export default function Navbar() {
           {/* Conditional links for 'user' role: Dashboard and Generate */}
           {user?.role === 'user' && (
             <>
+    <Link
+                className={`hover:text-blue-600 transition ${active(
+                  "/suggestions"
+                )}`}
+                to="/suggestions/new"
+              >
+                Generate
+              </Link>
+
               <Link
                 className={`hover:text-blue-600 transition ${active(
                   "/dashboard"
@@ -92,14 +101,14 @@ export default function Navbar() {
                 Dashboard
               </Link>
 
+          
               <Link
-                className={`hover:text-blue-600 transition ${active(
-                  "/suggestions"
-                )}`}
-                to="/suggestions/new"
-              >
-                Generate
-              </Link>
+  className={`hover:text-blue-600 transition ${active("/history")}`}
+  to="/history"
+>
+  History
+</Link>
+
             </>
           )}
           

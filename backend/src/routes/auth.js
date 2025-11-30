@@ -122,7 +122,7 @@ router.post(
           role: userDoc.role,
         },
         JWT_SECRET,
-        { expiresIn: '1d' }
+        { expiresIn: '30d' }
       );
 
       return res.json({
@@ -170,7 +170,7 @@ router.post(
           role: user.role || 'user',
         },
         JWT_SECRET,
-        { expiresIn: '1d' }
+        { expiresIn: '30d' }
       );
 
       console.log('Login successful for', email);

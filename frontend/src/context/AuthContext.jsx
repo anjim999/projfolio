@@ -8,35 +8,43 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const stored = localStorage.getItem("auth"); 
+    // Use sessionStorage so each browser tab/window has an isolated session
+    const stored = sessionStorage.getItem("auth");
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
         if (parsed && parsed.token) {
           setAuth(parsed);
         } else {
-          localStorage.removeItem("auth");
+          sessionStorage.removeItem("auth");
         }
       } catch (e) {
-        console.error("Failed to parse auth from localStorage", e);
-        localStorage.removeItem("auth");
+        console.error("Failed to parse auth from sessionStorage", e);
+        sessionStorage.removeItem("auth");
       }
     }
     setLoading(false);
   }, []);
 
   const login = (data) => {
+    // Validate the payload to avoid accidental overwrites (e.g. using non-auth responses)
+    if (!data || !data.token || !data.user) {
+      console.warn('Auth.login called with invalid payload, ignoring', data);
+      return;
+    }
+
     const payload = {
       token: data.token,
-      user: data.user
+      user: data.user,
     };
+
     setAuth(payload);
-    localStorage.setItem("auth", JSON.stringify(payload)); 
+    sessionStorage.setItem("auth", JSON.stringify(payload)); 
   };
 
   const logout = () => {
     setAuth(null);
-    localStorage.removeItem("auth");
+    sessionStorage.removeItem("auth");
   };
 
   return (

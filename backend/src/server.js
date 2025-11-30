@@ -4,13 +4,14 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const { PORT } = require('./config/env');
 const errorHandler = require('./middleware/errorHandler');
-
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const suggestionRoutes = require('./routes/suggestions');
 const submissionRoutes = require('./routes/submissions');
+const path = require("path");
 
 const app = express();
+app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 
 connectDB();
 

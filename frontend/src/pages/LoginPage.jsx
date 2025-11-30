@@ -63,7 +63,7 @@ export default function LoginPage() {
       toast.success("Login successful!", { autoClose: 1500 });
 
       setTimeout(() => {
-        if (user.role === "admin") navigate("/admin");
+        if (user.role === "admin") navigate("/admin/users");
         else navigate("/dashboard");
       }, 1500);
     } catch (err) {
