@@ -35,10 +35,11 @@ export default function LoginPage() {
     if (existingScript) return;
 
     const script = document.createElement("script");
-    script.src = "https://accounts.google.com/gsi/client";
-    script.async = true;
-    script.defer = true;
-    document.body.appendChild(script);
+script.src = "https://accounts.google.com/gsi/client?gsi_disable_fedcm=1";
+script.async = true;
+script.defer = true;
+document.body.appendChild(script);
+
 
     return () => {
       document.body.removeChild(script);
