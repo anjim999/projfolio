@@ -1,0 +1,13 @@
+#Ignore files for Node.js projects
+# Node / React
+node_modules/
+dist/
+build/
+.cache/
+.next/
+out/
+
+# Env files
+.env
+backend/.env
+frontend/.env
