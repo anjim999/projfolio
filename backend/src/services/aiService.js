@@ -1,13 +1,4 @@
 // backend/src/services/aiService.js
-
-/**
- * Local "AI-like" project suggestion generator.
- * No external API – we generate smart templates based on user inputs.
- *
- * Time: O(1)  – we always return 3 suggestions.
- * Space: O(1) – fixed-size array.
- */
-
 function buildToolsList(stackStr) {
   return [
     "VS Code (with ESLint + Prettier extensions)",
@@ -102,7 +93,6 @@ async function generateProjectSuggestions({
   const tools = buildToolsList(stackStr);
   const setupInstructions = buildSetupInstructions(stackStr, durationStr, goalStr);
 
-  // 1) Portfolio Project Hub
   const s1 = {
     title: "AI-Guided Portfolio Project Hub",
     description:
@@ -128,7 +118,6 @@ async function generateProjectSuggestions({
     setupInstructions,
   };
 
-  // 2) Learning Journey Tracker
   const s2 = {
     title: "Student Learning Journey Tracker",
     description:
@@ -153,7 +142,6 @@ async function generateProjectSuggestions({
     setupInstructions,
   };
 
-  // 3) Project Review & Feedback System
   const s3 = {
     title: "Project Review & Feedback System",
     description:
@@ -180,7 +168,6 @@ async function generateProjectSuggestions({
     setupInstructions,
   };
 
-  // Return array (controller will send directly or wrap if needed)
   return [s1, s2, s3];
 }
 

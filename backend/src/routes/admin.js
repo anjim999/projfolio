@@ -12,10 +12,8 @@ const router = express.Router();
 router.use(auth);
 router.use(requireAdmin);
 
-// GET /api/admin/users
 router.get('/users', async (req, res) => {
   try {
-    // Aggregate users along with counts of suggestions and submissions
     const users = await User.aggregate([
       { $sort: { created_at: -1 } },
       { $project: { name: 1, email: 1, role: 1, created_at: 1 } },
@@ -80,7 +78,6 @@ router.delete('/users/:id', async (req, res) => {
   }
 });
 
-// GET /api/admin/submissions
 router.get('/submissions', async (req, res) => {
   try {
     const submissions = await ProjectSubmission.find()
@@ -95,9 +92,7 @@ router.get('/submissions', async (req, res) => {
   }
 });
 
-// PATCH /api/admin/submissions/:id/review
-// PATCH /api/admin/submissions/:id/review
-// PATCH /api/admin/submissions/:id/review
+
 router.patch(
   "/submissions/:id/review",
   upload.single("badgeFile"),
@@ -116,12 +111,10 @@ router.patch(
           ? Number(completionPercent)
           : undefined;
 
-      // ❗️CHANGE THIS PART
       let badgeFileUrl = submission.adminReview?.badgeFileUrl;
 
       if (req.file) {
         badgeFileUrl = `${process.env.BASE_URL}/uploads/badges/${req.file.filename}`;
-        // before it might have been: `/uploads/badges/${req.file.filename}`
       }
 
       submission.adminReview = {
@@ -146,7 +139,6 @@ router.patch(
 
 
 
-// Get detailed view of a single user: profile + suggestions + submissions
 router.get('/users/:id/summary', async (req, res) => {
   try {
     const userId = req.params.id;

@@ -2,8 +2,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
-// import Navbar from "./components/Navbar";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; 
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
@@ -11,8 +11,6 @@ import HistoryPage from "./pages/HistoryPage";
 import StudentDashboard from "./pages/StudentDashboard";
 import GenerateSuggestionsPage from "./pages/GenerateSuggestionsPage";
 import SubmitProjectPage from "./pages/SubmitProjectPage";
-
-// import AdminSubmissionsPage from "./pages/AdminSubmissionsPage";
 import AdminUsersPage from "./pages/AdminUsersPage";
 import AdminUserDetailsPage from "./pages/AdminUserDetailsPage";
 
@@ -20,7 +18,17 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        {/* <Navbar /> */}
+        <ToastContainer
+          position="top-right"
+          autoClose={1500} 
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
         <div className="pt-16">
           <Routes>
             <Route path="/login" element={<LoginPage />} />
@@ -54,7 +62,6 @@ function App() {
               }
             />
 
-            {/* Admin routes */}
             <Route
               path="/admin/users"
               element={
@@ -91,7 +98,6 @@ function App() {
 />
 
 
-            {/* Default */}
             <Route path="*" element={<LoginPage />} />
           </Routes>
         </div>

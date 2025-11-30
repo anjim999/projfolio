@@ -7,7 +7,6 @@ const ProjectSubmission = require('../models/ProjectSubmission');
 const router = express.Router();
 router.use(auth);
 
-// POST /api/submissions
 router.post('/', async (req, res) => {
   try {
     const { suggestionId, githubLink, frontendUrl, backendUrl, videoUrl } = req.body;
@@ -43,7 +42,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-// GET /api/submissions/my
 router.get('/my', async (req, res) => {
   try {
     const submissions = await ProjectSubmission.find({

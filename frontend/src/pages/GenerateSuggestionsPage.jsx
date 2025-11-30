@@ -4,7 +4,6 @@ import api from "../api/axiosClient";
 import SuggestionsCard from "../components/SuggestionsCard";
 import Navbar from "../components/Navbar";
 
-// --- options (same as before) ---
 const SKILL_OPTIONS = [
   "HTML",
   "CSS",
@@ -96,7 +95,6 @@ export default function GenerateSuggestionsPage() {
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
 
-  // Filtered skills for search
   const filteredSkills = useMemo(() => {
     const term = skillSearch.trim().toLowerCase();
     if (!term) return SKILL_OPTIONS;
@@ -132,7 +130,6 @@ export default function GenerateSuggestionsPage() {
     setLoading(true);
 
     try {
-      // IMPORTANT: this should NOT save to DB – only AI suggestions
       const res = await api.post("/api/suggestions/generate", {
         skills: selectedSkills,
         level,
@@ -150,7 +147,6 @@ export default function GenerateSuggestionsPage() {
         list = data.suggestions;
       }
 
-      // Flag them as not yet saved
       const hydrated = (list || []).map((s) => ({
         ...s,
         saved: false,
@@ -166,7 +162,6 @@ export default function GenerateSuggestionsPage() {
     }
   };
 
-  // Save for later = status "planned"
   const handleSaveForLater = async (suggestion) => {
     try {
       const payload = {
@@ -205,7 +200,6 @@ export default function GenerateSuggestionsPage() {
     }
   };
 
-  // Start project = save + status "in-progress"
   const handleStart = async (suggestion) => {
     try {
       const payload = {
@@ -231,7 +225,7 @@ export default function GenerateSuggestionsPage() {
                 ...s,
                 _id: saved._id,
                 saved: true,
-                status: saved.status, // "in-progress"
+                status: saved.status, 
               }
             : s
         )
@@ -259,12 +253,10 @@ export default function GenerateSuggestionsPage() {
             history.
           </p>
 
-          {/* Form (same as before, omitted comments for brevity) */}
           <form
             onSubmit={handleGenerate}
             className="bg-white rounded-xl shadow border p-4 space-y-5"
           >
-            {/* Skills selector */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Your Skills (search & select)
@@ -303,7 +295,6 @@ export default function GenerateSuggestionsPage() {
               )}
             </div>
 
-            {/* Level & Interests */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -351,7 +342,6 @@ export default function GenerateSuggestionsPage() {
               </div>
             </div>
 
-            {/* Tech stack + Duration */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -381,7 +371,6 @@ export default function GenerateSuggestionsPage() {
               </div>
             </div>
 
-            {/* Goal */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Objective / Goal
@@ -409,7 +398,6 @@ export default function GenerateSuggestionsPage() {
             </button>
           </form>
 
-          {/* Suggestions */}
           {suggestions.length > 0 && (
             <div className="space-y-4">
               <h2 className="text-lg font-semibold text-gray-800">

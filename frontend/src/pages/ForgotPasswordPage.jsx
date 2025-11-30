@@ -29,7 +29,6 @@ export default function ForgotPasswordPage() {
         email: normalizedEmail,
       });
 
-      // 200 OK – OTP sent
       toast.success(
         "If the email exists, an OTP has been sent. Please check your inbox.",
         { autoClose: 2000 }
@@ -61,7 +60,6 @@ export default function ForgotPasswordPage() {
         newPassword,
       });
 
-      // 200 OK – password reset successful
       toast.success("Password reset successful. Redirecting to login...", {
         autoClose: 1500,
       });
@@ -94,7 +92,6 @@ export default function ForgotPasswordPage() {
           <p className="text-sm text-gray-500 mt-1">Step {step} of 2</p>
         </div>
 
-        {/* STEP 1: Enter email & request OTP */}
         {step === 1 && (
           <form
             onSubmit={handleRequestOtp}

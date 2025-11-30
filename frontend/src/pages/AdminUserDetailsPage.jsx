@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../api/axiosClient";
 import Navbar from "../components/Navbar";
+import { toast } from "react-toastify"; 
+
 export default function AdminUserDetailsPage() {
   const params = useParams();
   const resolvedUserId = params.id || params.userId;
@@ -11,9 +13,8 @@ export default function AdminUserDetailsPage() {
   const [user, setUser] = useState(null);
   const [submissions, setSubmissions] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
-  const [filterType, setFilterType] = useState("notReviewed"); // reviewed | notReviewed
+  const [filterType, setFilterType] = useState("notReviewed"); 
 
-  // review form state
   const [reviewingId, setReviewingId] = useState(null);
   const [completionPercent, setCompletionPercent] = useState("");
   const [rating, setRating] = useState("");
@@ -23,8 +24,8 @@ export default function AdminUserDetailsPage() {
 
   const load = async () => {
     if (!resolvedUserId) {
-      console.error("❌ No user id found in route params:", params);
-      alert("Invalid user URL: user id is missing.");
+      console.error("No user id found in route params:", params);
+      toast.error("Invalid user URL: user id is missing.", { autoClose: 1000 }); 
       return;
     }
 
@@ -34,9 +35,10 @@ export default function AdminUserDetailsPage() {
       setUser(res.data.user);
       setSubmissions(res.data.submissions || []);
       setSuggestions(res.data.suggestions || []);
+      toast.success("User details loaded.", { autoClose: 1000 }); 
     } catch (err) {
       console.error("Admin user details error:", err?.response?.data || err);
-      alert("Failed to load user details");
+      toast.error("Failed to load user details", { autoClose: 1000 }); 
     } finally {
       setLoading(false);
     }
@@ -44,7 +46,6 @@ export default function AdminUserDetailsPage() {
 
   useEffect(() => {
     load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resolvedUserId]);
 
   const openReviewForm = (submission) => {
@@ -76,7 +77,7 @@ export default function AdminUserDetailsPage() {
 
     const numericRating = Number(rating);
     if (!numericRating || numericRating < 1 || numericRating > 5) {
-      alert("Rating must be between 1 and 5");
+      toast.error("Rating must be between 1 and 5", { autoClose: 1000 }); 
       return;
     }
 
@@ -84,8 +85,7 @@ export default function AdminUserDetailsPage() {
       completionPercent &&
       (Number(completionPercent) < 0 || Number(completionPercent) > 100)
     ) {
-      alert("Completion % must be between 0 and 100");
-      return;
+      toast.error("Completion % must be between 0 and 100", { autoClose: 1000 }); 
     }
 
     try {
@@ -112,16 +112,15 @@ export default function AdminUserDetailsPage() {
 
       const updated = res.data.submission;
 
-      // Update local submissions list
       setSubmissions((prev) =>
         prev.map((s) => (s._id === updated._id ? updated : s))
       );
 
-      alert("Review saved");
+      toast.success("Review saved successfully!", { autoClose: 1000 }); 
       resetReviewForm();
     } catch (err) {
       console.error("Review submit error:", err?.response?.data || err);
-      alert("Failed to save review");
+      toast.error("Failed to save review", { autoClose: 1000 }); 
       setSubmittingReview(false);
     }
   };
@@ -174,7 +173,6 @@ export default function AdminUserDetailsPage() {
   
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-5xl mx-auto space-y-6">
-        {/* Header + back */}
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-800">
@@ -192,7 +190,6 @@ export default function AdminUserDetailsPage() {
           </Link>
         </div>
 
-        {/* Summary cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-white rounded-xl shadow border p-4">
             <p className="text-xs text-gray-500">Total Suggestions</p>
@@ -210,7 +207,6 @@ export default function AdminUserDetailsPage() {
           </div>
         </div>
 
-        {/* Submissions section with filter buttons */}
         <section className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-800">
@@ -345,7 +341,6 @@ export default function AdminUserDetailsPage() {
                   )}
                 </div>
 
-                {/* Review button only on NOT REVIEWED tab */}
                 {!sub.adminReview?.rating && filterType === "notReviewed" && (
                   <button
                     type="button"
@@ -360,7 +355,6 @@ export default function AdminUserDetailsPage() {
           )}
         </section>
 
-        {/* Review form (shown when reviewingId is set) */}
         {reviewingId && (
           <section className="bg-white rounded-xl shadow border p-4 space-y-3">
             <h3 className="text-sm font-semibold text-gray-800">
@@ -388,7 +382,7 @@ export default function AdminUserDetailsPage() {
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-1">
-                    Rating (1–5)
+                    Rating (1-5)
                   </label>
                   <input
                     type="number"

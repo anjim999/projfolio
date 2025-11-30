@@ -7,9 +7,9 @@ async function connectDB() {
     await mongoose.connect(MONGODB_URI, {
       dbName: 'ai_project_folio',
     });
-    console.log('✅ MongoDB connected');
+    console.log('MongoDB connected');
   } catch (err) {
-    console.error('❌ MongoDB connection error:', err);
+    console.error('MongoDB connection error:', err);
     process.exit(1);
   }
 }

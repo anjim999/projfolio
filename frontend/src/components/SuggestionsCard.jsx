@@ -1,5 +1,7 @@
 // src/components/SuggestionsCard.jsx
 import React, { useState } from "react";
+// NOTE: Toast is not imported here because the actual API calls (onSaveForLater, onStart)
+// are handled in the parent component, which is where the toast should be triggered.
 
 export default function SuggestionsCard({
   suggestion,
@@ -24,7 +26,8 @@ export default function SuggestionsCard({
   } = suggestion || {};
 
   const isInProgress = status === "in-progress";
-  const isPlanned = status === "planned";
+  const isPlanned = status === "planned" || status === "generated"; // Use generated to catch items just saved
+  const isSaved = saved || status === "planned" || status === "generated";
 
   // Split multiline setup instructions into lines for nice formatting
   const setupLines = (setupInstructions || "").split("\n");
@@ -62,7 +65,7 @@ export default function SuggestionsCard({
                 : "bg-gray-50 text-gray-600 border-gray-300")
             }
           >
-            {status === "in-progress"
+            {isInProgress
               ? "In Progress"
               : status === "completed"
               ? "Completed"
@@ -190,15 +193,15 @@ export default function SuggestionsCard({
         <button
           type="button"
           onClick={() => onSaveForLater && onSaveForLater(suggestion)}
-          disabled={saved && isPlanned}
+          disabled={isSaved && !isInProgress} // Disable if already saved and not in progress
           className={
             "cursor-pointer inline-flex items-center px-3 py-1.5 rounded-lg text-[11px] font-semibold border " +
-            (saved && isPlanned
+            (isSaved && !isInProgress
               ? "bg-gray-100 text-gray-400 border-gray-200 cursor-default"
               : "bg-white text-gray-800 border-gray-300 hover:bg-gray-50")
           }
         >
-          {saved && isPlanned ? "Saved" : "Save for later"}
+          {isSaved && !isInProgress ? "Saved" : "Save for later"}
         </button>
 
         <button

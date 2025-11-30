@@ -2,13 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaUserCircle, FaSignOutAlt } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
-// import your logo if you have one
-// import logo from "../assets/logo.png";
+
 
 export default function Navbar() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  // Assuming useAuth provides an object with auth property, which contains the user
   const { auth, logout } = useAuth();
   const user = auth?.user;
 
@@ -59,8 +57,6 @@ export default function Navbar() {
   return (
     <nav className="bg-white/70 backdrop-blur-md shadow-sm fixed top-0 left-0 right-0 z-40">
       <div className="flex items-center justify-between py-3 px-4 sm:px-6 lg:px-8">
-        {/* Logo / Brand */}
-        {/* Note: Setting /dashboard as the default link for brand, adjust if needed */}
         <Link
           className={`hover:text-blue-600 transition ${active("/")}`}
           to={user?.role === 'admin' ? '/admin/submissions' : '/dashboard'}
@@ -77,10 +73,8 @@ export default function Navbar() {
           </div>
         </Link>
 
-        {/* Right side */}
         <div className="flex items-center gap-6 sm:gap-8 text-sm">
 
-          {/* Conditional links for 'user' role: Dashboard and Generate */}
           {user?.role === 'user' && (
             <>
     <Link
@@ -112,7 +106,6 @@ export default function Navbar() {
             </>
           )}
           
-          {/* Profile dropdown (visible for both authenticated users and admins) */}
           {auth ? (
             <div
               className="relative"

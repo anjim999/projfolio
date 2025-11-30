@@ -8,7 +8,6 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Use sessionStorage so each browser tab/window has an isolated session
     const stored = sessionStorage.getItem("auth");
     if (stored) {
       try {
@@ -27,7 +26,6 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = (data) => {
-    // Validate the payload to avoid accidental overwrites (e.g. using non-auth responses)
     if (!data || !data.token || !data.user) {
       console.warn('Auth.login called with invalid payload, ignoring', data);
       return;

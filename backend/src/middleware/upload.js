@@ -4,7 +4,6 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
-// Ensure upload folder exists
 const uploadDir = path.join(__dirname, "..", "..", "uploads", "badges");
 fs.mkdirSync(uploadDir, { recursive: true });
 
@@ -35,7 +34,7 @@ const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB
+    fileSize: 5 * 1024 * 1024, 
   },
 });
 

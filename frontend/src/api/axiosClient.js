@@ -12,7 +12,6 @@ api.interceptors.request.use(
       return config;
     }
 
-    // Read auth token from sessionStorage to match per-tab sessions
     const stored = sessionStorage.getItem("auth");
     if (stored) {
       try {

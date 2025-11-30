@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import api from "../api/axiosClient";
 import Navbar from "../components/Navbar";
+import { toast } from "react-toastify";
 
 export default function HistoryPage() {
   const [suggestions, setSuggestions] = useState([]);
@@ -14,6 +15,7 @@ export default function HistoryPage() {
         setSuggestions(res.data || []);
       } catch (err) {
         console.error("History load error:", err);
+        toast.error("Failed to load project history", { autoClose: 1000 });
       } finally {
         setLoading(false);
       }
@@ -32,27 +34,24 @@ export default function HistoryPage() {
         status: "in-progress",
       });
 
-      // Move item from saved → in-progress in local state
       setSuggestions((prev) =>
         prev.map((s) =>
           s._id === id ? { ...s, status: "in-progress" } : s
         )
       );
-      alert("Project marked as in-progress. You can now work and submit it.");
+      toast.success("Project marked as in-progress! You can now work and submit it.", { autoClose: 1000 }); // ADDED: Toastify
     } catch (err) {
       console.error("Start from history error:", err?.response?.data || err);
-      alert("Failed to update project status");
+      toast.error("Failed to update project status", { autoClose: 1000 }); // ADDED: Toastify
     }
   };
 
   const renderSuggestionCard = (s, mode) => {
-    // mode: 'saved' | 'in-progress'
     return (
       <div
         key={s._id}
         className="bg-white rounded-xl border shadow p-4 space-y-3"
       >
-        {/* Title + status pill */}
         <div className="flex justify-between items-start gap-2">
           <div>
             <h3 className="font-semibold text-gray-900 text-base">
@@ -75,7 +74,6 @@ export default function HistoryPage() {
           </span>
         </div>
 
-        {/* Tech stack */}
         {Array.isArray(s.techStack) && s.techStack.length > 0 && (
           <div>
             <p className="text-[11px] font-semibold text-gray-700 mb-1">
@@ -94,7 +92,6 @@ export default function HistoryPage() {
           </div>
         )}
 
-        {/* Features */}
         {Array.isArray(s.features) && s.features.length > 0 && (
           <div>
             <p className="text-[11px] font-semibold text-gray-700 mb-1">
@@ -108,7 +105,6 @@ export default function HistoryPage() {
           </div>
         )}
 
-        {/* Learning outcomes */}
         {Array.isArray(s.learningOutcomes) && s.learningOutcomes.length > 0 && (
           <div>
             <p className="text-[11px] font-semibold text-gray-700 mb-1">
@@ -122,7 +118,6 @@ export default function HistoryPage() {
           </div>
         )}
 
-        {/* Tools (optional) */}
         {Array.isArray(s.tools) && s.tools.length > 0 && (
           <div>
             <p className="text-[11px] font-semibold text-gray-700 mb-1">
@@ -141,7 +136,6 @@ export default function HistoryPage() {
           </div>
         )}
 
-        {/* Setup & deploy instructions (full text) */}
         {s.setupInstructions && (
           <div>
             <details className="group">
@@ -155,7 +149,6 @@ export default function HistoryPage() {
           </div>
         )}
 
-        {/* Duration & level row */}
         <div className="flex flex-wrap items-center gap-3 text-[11px] text-gray-600">
           {s.duration && (
             <span>
@@ -169,7 +162,6 @@ export default function HistoryPage() {
           )}
         </div>
 
-        {/* Actions */}
         <div className="flex justify-end gap-2 pt-2">
           {mode === "saved" && (
             <button

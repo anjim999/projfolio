@@ -6,14 +6,9 @@ const { generateProjectSuggestions } = require("../services/aiService");
 
 const router = express.Router();
 
-// All routes require auth
 router.use(auth);
 
-/**
- * POST /api/suggestions/generate
- * -> Call local AI service ONLY
- * -> DO NOT save to DB
- */
+
 router.post("/generate", async (req, res) => {
   try {
     const { skills, level, interests, techStack, duration, goal } = req.body;
@@ -37,14 +32,7 @@ router.post("/generate", async (req, res) => {
   }
 });
 
-/**
- * POST /api/suggestions
- * -> Save a single suggestion for current user
- * Body: {
- *   title, description, techStack, features, learningOutcomes,
- *   duration, level, tools, setupInstructions, status
- * }
- */
+
 router.post("/", async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -73,7 +61,6 @@ router.post("/", async (req, res) => {
       level: level || "Intermediate",
       tools: tools || [],
       setupInstructions: setupInstructions || "",
-      // ✅ MATCH MONGOOSE ENUM: 'generated' | 'in-progress' | 'completed'
       status: status || "generated",
     });
 
@@ -85,10 +72,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-/**
- * GET /api/suggestions/my
- * -> Suggestions for logged-in user
- */
+
 router.get("/my", async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -100,11 +84,7 @@ router.get("/my", async (req, res) => {
   }
 });
 
-/**
- * PATCH /api/suggestions/:id/status
- * -> Update status
- * Body: { status } where status ∈ ['generated','in-progress','completed']
- */
+
 router.patch("/:id/status", async (req, res) => {
   try {
     const { status } = req.body;

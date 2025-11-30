@@ -29,15 +29,13 @@ const validate = (rules) => [
 
 const normalizeEmail = (email) => email.trim().toLowerCase();
 
-// --- REGISTER: REQUEST OTP ---
 router.post('/register-request-otp', async (req, res) => {
   try {
     const rawEmail = req.body.email || '';
     const email = normalizeEmail(rawEmail);
 
     const code = generateOtp();
-    const expiresAt = getExpiry(10); // returns Date
-
+    const expiresAt = getExpiry(10); 
     await Otp.create({
       email,
       code,
@@ -67,7 +65,6 @@ router.post('/register-request-otp', async (req, res) => {
   }
 });
 
-// --- REGISTER: VERIFY OTP + CREATE USER ---
 router.post(
   '/register-verify',
   validate([
@@ -137,7 +134,6 @@ router.post(
   }
 );
 
-// --- LOGIN ---
 router.post(
   '/login',
   validate([
@@ -191,7 +187,6 @@ router.post(
   }
 );
 
-// --- FORGOT PASSWORD: REQUEST OTP ---
 router.post(
   '/forgot-password-request',
   validate([body('email').isEmail()]),
@@ -234,7 +229,6 @@ router.post(
   }
 );
 
-// --- FORGOT PASSWORD: VERIFY OTP + CHANGE PASSWORD ---
 router.post(
   '/forgot-password-verify',
   validate([
@@ -284,7 +278,6 @@ router.post(
   }
 );
 
-// --- GOOGLE LOGIN ---
 router.post('/google', async (req, res) => {
   try {
     const { idToken, credential } = req.body || {};

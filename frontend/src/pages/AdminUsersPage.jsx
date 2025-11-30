@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../api/axiosClient";
 import Navbar from "../components/Navbar";
+import { toast } from "react-toastify"; 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -9,13 +10,12 @@ export default function AdminUsersPage() {
   const load = async () => {
     setLoading(true);
     try {
-      // Assuming the backend returns all users, including admins
       const res = await api.get("/api/admin/users");
       setUsers(res.data || []);
     } catch (err) {
       console.error("Admin users error:", err?.response?.data || err);
-      // IMPORTANT: Using console.error instead of alert()
-      console.error("Failed to load users: Please check network and API endpoint.");
+     
+      toast.error("Failed to load users: Please check network and API endpoint.", { autoClose: 1000 });
     } finally {
       setLoading(false);
     }
@@ -25,8 +25,6 @@ export default function AdminUsersPage() {
     load();
   }, []);
 
-  // Filter out any users with the 'admin' role, as requested.
-  // This ensures admins do not appear in the 'Admin Students List'.
   const studentUsers = users.filter(u => u.role !== 'admin');
 
   if (loading) {
@@ -80,7 +78,6 @@ export default function AdminUsersPage() {
                 </tr>
               </thead>
               <tbody>
-                {/* Mapping over the FILTERED array (studentUsers) */}
                 {studentUsers.map((u) => {
                     const userKey=u.id||u._id
 
@@ -90,7 +87,6 @@ export default function AdminUsersPage() {
                   >
                     <td className="px-4 py-2">{u.name}</td>
                     <td className="px-4 py-2">{u.email}</td>
-                    {/* <td className="px-4 py-2 capitalize">{u.role}</td> */}
                     <td className="px-4 py-2 text-center">
                       {u.suggestionCount ?? 0}
                     </td>

@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../api/axiosClient";
 import Navbar from "../components/Navbar";
+import { toast } from "react-toastify"; 
+
 export default function SubmitProjectPage() {
   const { suggestionId } = useParams();
   const [githubLink, setGithubLink] = useState("");
@@ -23,11 +25,11 @@ export default function SubmitProjectPage() {
         backendUrl,
         videoUrl,
       });
-      alert("Submission saved!");
+      toast.success("Submission saved!", { autoClose: 1000 }); 
       navigate("/dashboard");
     } catch (err) {
       console.error(err);
-      alert("Failed to submit project");
+      toast.error("Failed to submit project", { autoClose: 1000 }); 
     } finally {
       setLoading(false);
     }
