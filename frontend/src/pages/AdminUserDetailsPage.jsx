@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../api/axiosClient";
-
+import Navbar from "../components/Navbar";
 export default function AdminUserDetailsPage() {
   const params = useParams();
   const resolvedUserId = params.id || params.userId;
@@ -168,6 +168,10 @@ export default function AdminUserDetailsPage() {
     filterType === "reviewed" ? reviewedSubs : notReviewedSubs;
 
   return (
+
+    <>
+    <Navbar />  
+  
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-5xl mx-auto space-y-6">
         {/* Header + back */}
@@ -445,5 +449,6 @@ export default function AdminUserDetailsPage() {
         )}
       </div>
     </div>
+    </>
   );
 }

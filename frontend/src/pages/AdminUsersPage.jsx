@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../api/axiosClient";
-
+import Navbar from "../components/Navbar";
 export default function AdminUsersPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,6 +34,9 @@ export default function AdminUsersPage() {
   }
 
   return (
+    <>
+    <Navbar />
+    
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-5xl mx-auto space-y-4">
         <div className="flex justify-between items-center">
@@ -110,5 +113,6 @@ export default function AdminUsersPage() {
         )}
       </div>
     </div>
+    </>
   );
 }
