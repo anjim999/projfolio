@@ -83,6 +83,21 @@ const GOAL_OPTIONS = [
   "College mini project",
 ];
 
+const TECH_STACK_OPTIONS = [
+  "MERN (React + Node + MongoDB)",
+  "Next.js + Node.js",
+  "Django + React",
+  "Flask + React",
+  "Python + Pandas + Plotly",
+  "Python + TensorFlow + ML",
+  "React + Firebase",
+  "Vanilla JS + Node + SQL",
+  "Vue.js + Node + PostgreSQL",
+  "FastAPI + React",
+  "React Native",
+  "Flutter",
+];
+
 export default function GenerateSuggestionsPage() {
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [skillSearch, setSkillSearch] = useState("");
@@ -347,14 +362,19 @@ export default function GenerateSuggestionsPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Preferred Tech Stack
                 </label>
-                <input
+                <select
                   value={techStack}
                   onChange={(e) => setTechStack(e.target.value)}
-                  className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500 outline-none"
-                  placeholder="MERN, Django + React, etc."
-                />
+                  className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500 outline-none bg-white"
+                >
+                  {TECH_STACK_OPTIONS.map((stack) => (
+                    <option key={stack} value={stack}>
+                      {stack}
+                    </option>
+                  ))}
+                </select>
                 <p className="text-[11px] text-gray-400 mt-1">
-                  For this assignment, you can keep it as <b>MERN</b>.
+                  Choose your preferred stack. Suggestions will be tailored accordingly.
                 </p>
               </div>
 

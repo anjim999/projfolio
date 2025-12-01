@@ -237,7 +237,7 @@ export default function StudentDashboard() {
                             <span className="font-semibold">Rating:</span>{" "}
                             {review.rating} / 5
                           </p>
-                          {review.completionPercent != null && (
+                          {review.completionPercent !== null && review.completionPercent !== undefined && (
                             <p>
                               <span className="font-semibold">
                                 Completion:
@@ -252,31 +252,38 @@ export default function StudentDashboard() {
                             </p>
                           )}
 
-                          {review.badgeFileUrl && (
-                            <div className="mt-2">
-                              <p className="font-semibold text-xs">
-                                Badge / Certificate:
+                          {review.badgeFileUrl ? (
+                            <div className="mt-3 p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+                              <p className="font-semibold text-xs mb-3 text-gray-800">
+                                🏆 Badge / Certificate:
                               </p>
 
                               {review.badgeFileUrl.match(
                                 /\.(jpg|jpeg|png|gif)$/i
                               ) ? (
-                                <img
-                                  src={review.badgeFileUrl}
-                                  alt="Badge"
-                                  className="mt-1 w-40 h-auto rounded-lg border shadow"
-                                />
+                                <div className="flex justify-center">
+                                  <img
+                                    src={review.badgeFileUrl}
+                                    alt="Badge Certificate"
+                                    className="max-w-sm h-auto rounded-lg border-2 border-white shadow-lg"
+                                    onError={(e) => {
+                                      console.error("Image failed to load:", review.badgeFileUrl);
+                                      e.target.innerHTML = "❌ Image failed to load";
+                                    }}
+                                  />
+                                </div>
                               ) : (
                                 <a
                                   href={review.badgeFileUrl}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="text-blue-600 underline text-xs"
+                                  download
+                                  className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition"
                                 >
-                                  View File
+                                  📥 Download Certificate
                                 </a>
                               )}
                             </div>
+                          ) : (
+                            <p className="text-xs text-gray-400 mt-2">No badge file</p>
                           )}
                         </div>
                       )}

@@ -114,7 +114,8 @@ router.patch(
       let badgeFileUrl = submission.adminReview?.badgeFileUrl;
 
       if (req.file) {
-        badgeFileUrl = `${process.env.BASE_URL}/uploads/badges/${req.file.filename}`;
+        const baseUrl = process.env.BASE_URL || `http://localhost:${process.env.PORT || 5000}`;
+        badgeFileUrl = `${baseUrl}/uploads/badges/${req.file.filename}`;
       }
 
       submission.adminReview = {
