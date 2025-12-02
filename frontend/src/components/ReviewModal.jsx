@@ -18,21 +18,16 @@ export default function ReviewModal({
 }) {
   if (!isOpen) return null;
 
-  // The submission title is used in the modal header
   const title = submission?.suggestionId?.title || "Untitled Project";
 
-  // --- FUNCTION: Handle badge file removal ---
   const handleRemoveBadge = () => {
-    // This clears the state
     setBadgeFile(null);
-    // Clear the file input value visually
     const fileInput = document.getElementById("badge-file-input");
     if (fileInput) {
       fileInput.value = "";
     }
   };
 
-  // Optional: A simple click outside handler to close the modal
   const handleOverlayClick = (e) => {
     if (e.target.id === "modal-overlay") {
       onClose();
@@ -40,16 +35,13 @@ export default function ReviewModal({
   };
 
   return (
-    // Modal Overlay (Full screen, fixed, semi-transparent background)
     <div
       id="modal-overlay"
       className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 transition-opacity duration-300"
       onClick={handleOverlayClick}
     >
-      {/* Modal Container */}
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden transform transition-all duration-300 scale-100 opacity-100">
         
-        {/* Modal Header */}
         <div className="px-6 py-4 bg-indigo-600 text-white flex justify-between items-center">
           <h3 className="text-xl font-bold">
             Review: {title}
@@ -57,7 +49,6 @@ export default function ReviewModal({
           <button
             type="button"
             onClick={onClose}
-            // ADDED: cursor-pointer
             className="text-white hover:text-indigo-200 transition-colors cursor-pointer"
             aria-label="Close"
           >
@@ -78,10 +69,8 @@ export default function ReviewModal({
           </button>
         </div>
 
-        {/* Modal Body (Form) */}
         <form className="p-6 space-y-4" onSubmit={onSubmit} encType="multipart/form-data">
           
-          {/* Submission Info Links */}
           <div className="text-sm space-x-4 border-b pb-4">
               <span className="font-semibold text-gray-700">Links:</span>
               <a href={submission.githubLink} target="_blank" rel="noreferrer" className="text-blue-600 hover:text-blue-800 underline cursor-pointer">GitHub</a>
@@ -133,15 +122,12 @@ export default function ReviewModal({
                 type="file"
                 accept="image/*,application/pdf"
                 onChange={(e) => setBadgeFile(e.target.files[0] || null)}
-                // RESTORED ORIGINAL STYLING:
                 className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
               />
-              {/* --- CORRECTED: Delete Icon at the end of the file line --- */}
               {badgeFile && (
                 <button
                   type="button"
                   onClick={handleRemoveBadge}
-                  // ADDED: cursor-pointer
                   className="p-1 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition duration-150 flex items-center justify-center shrink-0 cursor-pointer"
                   aria-label="Remove badge file"
                   title={`Remove ${badgeFile.name}`}
@@ -163,7 +149,6 @@ export default function ReviewModal({
                 </button>
               )}
             </div>
-            {/* REMOVED: The extra line displaying badgeFile.name */}
           </div>
 
           <div>
@@ -179,12 +164,10 @@ export default function ReviewModal({
             />
           </div>
 
-          {/* Modal Footer (Actions) */}
           <div className="flex gap-3 justify-end pt-2 border-t">
             <button
               type="button"
               onClick={onClose}
-              // ADDED: cursor-pointer
               className="px-4 py-2 rounded-lg text-sm font-semibold border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition duration-150 cursor-pointer"
             >
               Cancel
@@ -192,7 +175,6 @@ export default function ReviewModal({
             <button
               type="submit"
               disabled={submittingReview}
-              // ADDED: cursor-pointer (for non-disabled state)
               className="px-4 py-2 rounded-lg text-sm font-semibold bg-indigo-600 text-white hover:bg-indigo-700 transition duration-150 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
             >
               {submittingReview ? "Saving..." : "Save Review"}

@@ -4,7 +4,6 @@ import { useParams, Link } from "react-router-dom";
 import api from "../api/axiosClient";
 import Navbar from "../components/Navbar";
 import { toast } from "react-toastify";
-// 1. Import the new ReviewModal component
 import ReviewModal from "../components/ReviewModal"; 
 
 export default function AdminUserDetailsPage() {
@@ -17,10 +16,8 @@ export default function AdminUserDetailsPage() {
   const [suggestions, setSuggestions] = useState([]);
   const [filterType, setFilterType] = useState("notReviewed"); 
 
-  // 2. Updated state to hold the entire submission object for review, or null
   const [reviewingSubmission, setReviewingSubmission] = useState(null);
   
-  // 3. Keep form state and submission state, but they will be passed to the modal
   const [completionPercent, setCompletionPercent] = useState("");
   const [rating, setRating] = useState("");
   const [comments, setComments] = useState("");
@@ -28,7 +25,6 @@ export default function AdminUserDetailsPage() {
   const [submittingReview, setSubmittingReview] = useState(false);
 
   const load = async () => {
-    // ... (load function remains the same)
     if (!resolvedUserId) {
       console.error("No user id found in route params:", params);
       toast.error("Invalid user URL: user id is missing.", { autoClose: 1000 }); 
@@ -55,10 +51,8 @@ export default function AdminUserDetailsPage() {
   }, [resolvedUserId]);
 
   const openReviewForm = (submission) => {
-    // 4. Set the reviewing submission to open the modal
     setReviewingSubmission(submission);
     
-    // 5. Initialize form fields based on existing review data
     setCompletionPercent(
       submission.adminReview?.completionPercent?.toString() || ""
     );
@@ -68,11 +62,10 @@ export default function AdminUserDetailsPage() {
         : ""
     );
     setComments(submission.adminReview?.comments || "");
-    setBadgeFile(null); // Always clear the file input
+    setBadgeFile(null); 
   };
 
   const resetReviewForm = () => {
-    // 6. Reset the submission and close the modal
     setReviewingSubmission(null);
     setCompletionPercent("");
     setRating("");
@@ -81,7 +74,6 @@ export default function AdminUserDetailsPage() {
     setSubmittingReview(false);
   };
 
-  // 7. handleReviewSubmit remains in the parent to update submissions array after success
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
     if (!reviewingSubmission?._id) return;
@@ -98,7 +90,7 @@ export default function AdminUserDetailsPage() {
       (Number(completionPercent) < 0 || Number(completionPercent) > 100)
     ) {
       toast.error("Completion % must be between 0 and 100", { autoClose: 1000 });
-      return; // Added return here to prevent further execution if % is invalid
+      return;
     }
 
     try {
@@ -130,14 +122,13 @@ export default function AdminUserDetailsPage() {
       );
 
       toast.success("Review saved successfully!", { autoClose: 1000 }); 
-      resetReviewForm(); // Close modal on success
+      resetReviewForm(); 
     } catch (err) {
       console.error("Review submit error:", err?.response?.data || err);
       toast.error("Failed to save review", { autoClose: 1000 }); 
       setSubmittingReview(false);
     }
   };
-  // ... (loading and error checks remain the same)
   if (!resolvedUserId) {
     return (
       <div className="p-6">
@@ -203,7 +194,6 @@ export default function AdminUserDetailsPage() {
           </Link>
         </div>
 
-        {/* ... (Summary stats section remains the same) ... */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-white rounded-xl shadow border p-4">
             <p className="text-xs text-gray-500">Total Suggestions</p>
@@ -370,18 +360,15 @@ export default function AdminUserDetailsPage() {
           )}
         </section>
 
-        {/* 8. The inline review section is REMOVED and replaced by the modal component */}
       </div>
     </div>
 
-    {/* 9. Conditionally render the ReviewModal outside the main content flow (for proper z-index/overlay) */}
     {reviewingSubmission && (
       <ReviewModal
         submission={reviewingSubmission}
         isOpen={!!reviewingSubmission}
         onClose={resetReviewForm}
         onSubmit={handleReviewSubmit}
-        // Pass all the state and setters
         completionPercent={completionPercent}
         setCompletionPercent={setCompletionPercent}
         rating={rating}
