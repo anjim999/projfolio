@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../api/axiosClient";
 import Navbar from "../components/Navbar";
-import { toast } from "react-toastify"; 
+import { toast } from "react-toastify";
+// 1. Import the new ReviewModal component
+import ReviewModal from "../components/ReviewModal"; 
 
 export default function AdminUserDetailsPage() {
   const params = useParams();
@@ -15,7 +17,10 @@ export default function AdminUserDetailsPage() {
   const [suggestions, setSuggestions] = useState([]);
   const [filterType, setFilterType] = useState("notReviewed"); 
 
-  const [reviewingId, setReviewingId] = useState(null);
+  // 2. Updated state to hold the entire submission object for review, or null
+  const [reviewingSubmission, setReviewingSubmission] = useState(null);
+  
+  // 3. Keep form state and submission state, but they will be passed to the modal
   const [completionPercent, setCompletionPercent] = useState("");
   const [rating, setRating] = useState("");
   const [comments, setComments] = useState("");
@@ -23,6 +28,7 @@ export default function AdminUserDetailsPage() {
   const [submittingReview, setSubmittingReview] = useState(false);
 
   const load = async () => {
+    // ... (load function remains the same)
     if (!resolvedUserId) {
       console.error("No user id found in route params:", params);
       toast.error("Invalid user URL: user id is missing.", { autoClose: 1000 }); 
@@ -49,7 +55,10 @@ export default function AdminUserDetailsPage() {
   }, [resolvedUserId]);
 
   const openReviewForm = (submission) => {
-    setReviewingId(submission._id);
+    // 4. Set the reviewing submission to open the modal
+    setReviewingSubmission(submission);
+    
+    // 5. Initialize form fields based on existing review data
     setCompletionPercent(
       submission.adminReview?.completionPercent?.toString() || ""
     );
@@ -59,11 +68,12 @@ export default function AdminUserDetailsPage() {
         : ""
     );
     setComments(submission.adminReview?.comments || "");
-    setBadgeFile(null);
+    setBadgeFile(null); // Always clear the file input
   };
 
   const resetReviewForm = () => {
-    setReviewingId(null);
+    // 6. Reset the submission and close the modal
+    setReviewingSubmission(null);
     setCompletionPercent("");
     setRating("");
     setComments("");
@@ -71,9 +81,11 @@ export default function AdminUserDetailsPage() {
     setSubmittingReview(false);
   };
 
+  // 7. handleReviewSubmit remains in the parent to update submissions array after success
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
-    if (!reviewingId) return;
+    if (!reviewingSubmission?._id) return;
+    const reviewingId = reviewingSubmission._id; // Get the ID from the state
 
     const numericRating = Number(rating);
     if (!numericRating || numericRating < 1 || numericRating > 5) {
@@ -85,7 +97,8 @@ export default function AdminUserDetailsPage() {
       completionPercent &&
       (Number(completionPercent) < 0 || Number(completionPercent) > 100)
     ) {
-      toast.error("Completion % must be between 0 and 100", { autoClose: 1000 }); 
+      toast.error("Completion % must be between 0 and 100", { autoClose: 1000 });
+      return; // Added return here to prevent further execution if % is invalid
     }
 
     try {
@@ -117,14 +130,14 @@ export default function AdminUserDetailsPage() {
       );
 
       toast.success("Review saved successfully!", { autoClose: 1000 }); 
-      resetReviewForm();
+      resetReviewForm(); // Close modal on success
     } catch (err) {
       console.error("Review submit error:", err?.response?.data || err);
       toast.error("Failed to save review", { autoClose: 1000 }); 
       setSubmittingReview(false);
     }
   };
-
+  // ... (loading and error checks remain the same)
   if (!resolvedUserId) {
     return (
       <div className="p-6">
@@ -190,6 +203,7 @@ export default function AdminUserDetailsPage() {
           </Link>
         </div>
 
+        {/* ... (Summary stats section remains the same) ... */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-white rounded-xl shadow border p-4">
             <p className="text-xs text-gray-500">Total Suggestions</p>
@@ -251,6 +265,7 @@ export default function AdminUserDetailsPage() {
                 key={sub._id}
                 className="bg-white rounded-xl shadow border p-4 space-y-2"
               >
+                {/* ... (Submission details and links remain the same) ... */}
                 <div className="flex justify-between items-center">
                   <div>
                     <h3 className="text-sm font-semibold text-gray-800">
@@ -355,94 +370,29 @@ export default function AdminUserDetailsPage() {
           )}
         </section>
 
-        {reviewingId && (
-          <section className="bg-white rounded-xl shadow border p-4 space-y-3">
-            <h3 className="text-sm font-semibold text-gray-800">
-              Review Submission
-            </h3>
-            <form
-              className="space-y-3"
-              onSubmit={handleReviewSubmit}
-              encType="multipart/form-data"
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">
-                    Completion Percentage (0–100)
-                  </label>
-                  <input
-                    type="number"
-                    min="0"
-                    max="100"
-                    value={completionPercent}
-                    onChange={(e) => setCompletionPercent(e.target.value)}
-                    className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500 outline-none"
-                    placeholder="e.g., 80"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">
-                    Rating (1-5)
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="5"
-                    value={rating}
-                    onChange={(e) => setRating(e.target.value)}
-                    className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500 outline-none"
-                    placeholder="e.g., 4"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">
-                  Badge File (image or PDF)
-                </label>
-                <input
-                  type="file"
-                  accept="image/*,application/pdf"
-                  onChange={(e) => setBadgeFile(e.target.files[0] || null)}
-                  className="w-full text-xs"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">
-                  Comments
-                </label>
-                <textarea
-                  value={comments}
-                  onChange={(e) => setComments(e.target.value)}
-                  rows={3}
-                  className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500 outline-none"
-                  placeholder="Share your feedback about this project..."
-                />
-              </div>
-
-              <div className="flex gap-2 justify-end">
-                <button
-                  type="button"
-                  onClick={resetReviewForm}
-                  className="cursor-pointer px-4 py-2 rounded-lg text-xs font-semibold border border-gray-300 bg-white text-gray-700 hover:bg-gray-100"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={submittingReview}
-                  className="cursor-pointer px-4 py-2 rounded-lg text-xs font-semibold bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-60"
-                >
-                  {submittingReview ? "Saving..." : "Save Review"}
-                </button>
-              </div>
-            </form>
-          </section>
-        )}
+        {/* 8. The inline review section is REMOVED and replaced by the modal component */}
       </div>
     </div>
+
+    {/* 9. Conditionally render the ReviewModal outside the main content flow (for proper z-index/overlay) */}
+    {reviewingSubmission && (
+      <ReviewModal
+        submission={reviewingSubmission}
+        isOpen={!!reviewingSubmission}
+        onClose={resetReviewForm}
+        onSubmit={handleReviewSubmit}
+        // Pass all the state and setters
+        completionPercent={completionPercent}
+        setCompletionPercent={setCompletionPercent}
+        rating={rating}
+        setRating={setRating}
+        comments={comments}
+        setComments={setComments}
+        badgeFile={badgeFile}
+        setBadgeFile={setBadgeFile}
+        submittingReview={submittingReview}
+      />
+    )}
     </>
   );
 }
