@@ -2,14 +2,14 @@
 import { useEffect, useState } from "react";
 import api from "../api/axiosClient";
 import Navbar from "../components/Navbar";
-import { toast } from "react-toastify"; 
+import { toast } from "react-toastify";
 
 export default function StudentDashboard() {
   const [suggestions, setSuggestions] = useState([]);
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedReviewId, setExpandedReviewId] = useState(null);
-  const [submissionFilter, setSubmissionFilter] = useState("submitted"); 
+  const [submissionFilter, setSubmissionFilter] = useState("submitted");
   useEffect(() => {
     async function load() {
       try {
@@ -19,7 +19,7 @@ export default function StudentDashboard() {
         ]);
         setSuggestions(sRes.data || []);
         setSubmissions(subRes.data || []);
-        
+
       } catch (err) {
         console.error("Dashboard load error:", err);
         toast.error("Failed to load dashboard data", { autoClose: 1000 });
@@ -212,10 +212,8 @@ export default function StudentDashboard() {
 
                       {review?.rating ? (
                         <div className="flex items-center justify-between mt-1">
-                          <p className="text-xs text-green-700">
-                            Rating: {review.rating} ⭐{" "}
-                            {review.completionPercent != null &&
-                              `| Completion: ${review.completionPercent}%`}
+                          <p className="text-xs text-green-700 font-semibold">
+                            Rating: {review.rating} / 5
                           </p>
                           <button
                             type="button"
@@ -233,18 +231,6 @@ export default function StudentDashboard() {
 
                       {review?.rating && isExpanded && (
                         <div className="mt-2 border-t border-gray-100 pt-2 text-xs space-y-1">
-                          <p>
-                            <span className="font-semibold">Rating:</span>{" "}
-                            {review.rating} / 5
-                          </p>
-                          {review.completionPercent !== null && review.completionPercent !== undefined && (
-                            <p>
-                              <span className="font-semibold">
-                                Completion:
-                              </span>{" "}
-                              {review.completionPercent}%
-                            </p>
-                          )}
                           {review.comments && (
                             <p>
                               <span className="font-semibold">Comments:</span>{" "}
@@ -255,7 +241,7 @@ export default function StudentDashboard() {
                           {review.badgeFileUrl ? (
                             <div className="mt-3 p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
                               <p className="font-semibold text-xs mb-3 text-gray-800">
-                                🏆 Badge / Certificate:
+                                Badge / Certificate:
                               </p>
 
                               {review.badgeFileUrl.match(
@@ -268,7 +254,7 @@ export default function StudentDashboard() {
                                     className="max-w-sm h-auto rounded-lg border-2 border-white shadow-lg"
                                     onError={(e) => {
                                       console.error("Image failed to load:", review.badgeFileUrl);
-                                      e.target.innerHTML = "❌ Image failed to load";
+                                      e.target.innerHTML = "Image failed to load";
                                     }}
                                   />
                                 </div>
@@ -278,7 +264,7 @@ export default function StudentDashboard() {
                                   download
                                   className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition"
                                 >
-                                  📥 Download Certificate
+                                  Download Certificate
                                 </a>
                               )}
                             </div>

@@ -68,7 +68,7 @@ export default function Navbar() {
               className="w-9 h-9 object-contain drop-shadow-sm"
             /> */}
             <span className="font-extrabold text-2xl bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 text-transparent bg-clip-text tracking-wide">
-              AI Project Folio
+              AI Projfolio
             </span>
           </div>
         </Link>
