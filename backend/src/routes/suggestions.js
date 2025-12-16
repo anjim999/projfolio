@@ -28,7 +28,7 @@ router.post("/generate", async (req, res) => {
     });
   } catch (err) {
     console.error("Generate suggestions error:", err);
-    res.status(500).json({ message: "Failed to generate suggestions" });
+    res.status(500).json({ message: err});
   }
 });
 
